@@ -3,6 +3,7 @@
 #include <esp_now.h>
 #include <esp_wifi.h>
 #include "motor.h"
+#include "encoder_speed.h"
 
 struct RemoteData {
   int LX;
@@ -224,6 +225,7 @@ void setup() {
   delay(1000);
 
   motorInit();
+  encoderSpeedInit();
   stopCar();
 
   WiFi.mode(WIFI_STA);
@@ -267,6 +269,8 @@ void loop() {
     hasNewData = false;
     controlCar(latestData);
   }
+
+  encoderSpeedUpdate();
 
   // 500ms 没收到遥控数据，自动停车
   if (millis() - lastRecvTime > 500 && !alreadyStopped) {
